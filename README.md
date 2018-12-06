@@ -18,8 +18,6 @@ Bring the features in line with the original Python library and Tal's Javascript
 - [Levenshtein](https://en.wikipedia.org/wiki/Levenshtein_distance)
 - ngrams - To be researched
 - regex engine implementation - To be researched
-  - [TRE](https://laurikari.net/tre/) engine
-  - By [blog](https://ducktape.blot.im/tre-a-regex-engine-with-approximate-matching) post on TRE
 - Local alignment algorithms
 - Longest Common string algorithms
 
