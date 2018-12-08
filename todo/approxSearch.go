@@ -1,4 +1,4 @@
-package fuzzyfind
+package approx
 
 // Check if a rune slice contains a rune
 func findRune(b []rune, c rune) int {
@@ -20,7 +20,7 @@ func prepareInitCandidatesMap(subseq []rune, maxLDist int) map[rune]int {
 	return candidateMap
 }
 
-func FindNearMatches(subsequence string, sequence string, maxLDist int) []Match {
+func findNearMatches(subsequence string, sequence string, maxLDist int) []Match {
 	// Ensure substring has at least some values
 	if subsequence == "" {
 		return []Match{} //, errors.New("Subsequence must have values")

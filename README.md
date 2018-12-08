@@ -1,4 +1,4 @@
-# fuzzyfind
+# approx
 A clone of python fuzzysearch library in Go.
 
 It is based off the v0.1.0 version of the Python [fuzzysearch library](https://github.com/taleinat/fuzzysearch/blob/v0.1.0/fuzzysearch/fuzzysearch.py) by [Tal Einat](https://github.com/taleinat).
@@ -10,25 +10,25 @@ fuzzyfind uses a modified levenshtein algorithm to find approximate matches of a
 ## Benchmarks
 ```
 Short Pattern Short Text:
-BenchmarkShortPShortTFuzzyFindShort-8    	  300000	      4301 ns/op
-BenchmarkShortPShortTFuzzyFindPigeon-8   	  100000	     13708 ns/op
+BenchmarkShortPShortTApproxFind-8    	  300000	      4301 ns/op
+BenchmarkShortPShortTapproxPigeon-8   	  100000	     13708 ns/op
 
 Short Pattern Long  Text:
-BenchmarkShortPLongTFuzzyFindShort-8     	  100000	     18044 ns/op
-BenchmarkShortPLongTFuzzyFindPigeon-8    	  100000	     17393 ns/op
+BenchmarkShortPLongTApproxFind-8     	  100000	     18044 ns/op
+BenchmarkShortPLongTapproxPigeon-8    	  100000	     17393 ns/op
 
 Long  Pattern Short Text:
-BenchmarkLongPShortTFuzzyFindShort-8     	  300000	      4567 ns/op
-BenchmarkLongPShortTFuzzyFindPigeon-8    	  200000	     10575 ns/op
+BenchmarkLongPShortTApproxFind-8     	  300000	      4567 ns/op
+BenchmarkLongPShortTapproxPigeon-8    	  200000	     10575 ns/op
 
 Long  Pattern Long  Text:
-BenchmarkLongPLongTFuzzyFindShort-8      	  100000	     18173 ns/op
-BenchmarkLongPLongTFuzzyFindPigeon-8     	   30000	     46241 ns/op
+BenchmarkLongPLongTApproxFind-8      	  100000	     18173 ns/op
+BenchmarkLongPLongTapproxPigeon-8     	   30000	     46241 ns/op
 
 ```
 
 ### This is a work in progress
-For now just use the FuzzyFindShort function, it has solid performance and is the most correct.
+For now just use the ApproxFind function, it has solid performance and is the most correct.
 
 ## Install
 `go get github.com/sstadick/fuzzyfind`
@@ -39,14 +39,14 @@ package main
 
 import (
 	"github.com/davecgh/go-spew/spew"
-	"github.com/sstadick/fuzzyfind"
+	"github.com/sstadick/fuzzyfind/approx"
 )
 
 func main() {
 	haystack := "GACTAGCACTGTAGGGATAACAATTTCACACAGGTGGACAATTACATTGAAAATCACAGATTGGTCACACACACATTGGACATACATAGAAACACACACACATACATTAGATACGAACATAGAAACACACATTAGACGCGTACATAGACACAAACACATTGACAGGCAGTTCAGATGATGACGCCCGACTGATACTCGCGTAGTCGTGGGAGGCAAGGCACACAGGGGATAGG"
 	needle := "TGCACTGTAGGGATAACAAT" // distance 1
 	maxDist := 2
-	result, _ := fuzzyfind.FuzzyFindShort(needle, haystack, maxDist, fuzzyfind.DefaultOptions)
+	result, _ := approx.ApproxFind(needle, haystack, maxDist, approx.DefaultOptions)
 	spew.Dump(result)
 }
 ```
@@ -79,7 +79,7 @@ Output
 ```
 
 ### If you want to .... just get going:
-Use the FuzzyFind method, it will choose the best method for you depending on your pattern and text sizes
+Use the approx method, it will choose the best method for you depending on your pattern and text sizes
 
 ### If you want to .... match the same pattern against multiple texts:
 This has yet to be implemented. It will likely use boyer moore to create a lookup table for the pattern.
@@ -88,10 +88,10 @@ This has yet to be implemented. It will likely use boyer moore to create a looku
 This has yet to be implemented. It will likely use a kmer index of the text
 
 ### If you want to .... specifically use just the modified levenshtien algorithm:
-Use FuzzyFindShort. This should work best on short patterns.
+Use ApproxFind. This should work best on short patterns.
 
 ### if you want to .... specifically use the pigeonhole method:
-use FuzzyFindPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3.
+use approxPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3.
 This is also not yet implemented.
 
 ## Futher readings

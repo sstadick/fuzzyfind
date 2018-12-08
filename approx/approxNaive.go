@@ -1,4 +1,4 @@
-package fuzzyfind
+package approx
 
 // This file contains functions meant for learning
 // various string matching algorithms

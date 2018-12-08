@@ -1,4 +1,4 @@
-package fuzzyfind
+package approx
 
 import (
 	"index/suffixarray"

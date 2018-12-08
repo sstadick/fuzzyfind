@@ -1,4 +1,4 @@
-package fuzzyfind
+package approx
 
 // A candidate match
 type Candidate struct {
