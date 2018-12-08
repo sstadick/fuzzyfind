@@ -7,7 +7,7 @@ fuzzyfind/approx is an approximate string matching tool. It is heavily inspired 
 What makes this library differnt than other \*fuzzy\* libraries is that it returns the start and end index's of your pattern in the text that you search. The long term goal is to add more variants of this search for different use cases. For now though, ApproxFind will work well.
 
 ## Synopsis
-fuzzyfind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
+ApproxFind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
 
 
 ## Benchmarks
