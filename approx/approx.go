@@ -1,3 +1,5 @@
+// approx is a package for approximate string matching. It will extract strings withing
+// a given edit distance and return their start, end, and distance.
 package approx
 
 import (

@@ -1,12 +1,5 @@
 package approx
 
-// A candidate match
-type Candidate struct {
-	Start       int
-	SubseqIndex int
-	Dist        int
-}
-
 // A match
 type Match struct {
 	Start int
