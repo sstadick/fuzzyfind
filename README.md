@@ -7,24 +7,28 @@ It is based off the v0.1.0 version of the Python [fuzzysearch library](https://g
 fuzzyfind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
 
 
+## Benchmarks
+```
+Short Pattern Short Text:
+BenchmarkShortPShortTFuzzyFindShort-8    	  300000	      4301 ns/op
+BenchmarkShortPShortTFuzzyFindPigeon-8   	  100000	     13708 ns/op
+
+Short Pattern Long  Text:
+BenchmarkShortPLongTFuzzyFindShort-8     	  100000	     18044 ns/op
+BenchmarkShortPLongTFuzzyFindPigeon-8    	  100000	     17393 ns/op
+
+Long  Pattern Short Text:
+BenchmarkLongPShortTFuzzyFindShort-8     	  300000	      4567 ns/op
+BenchmarkLongPShortTFuzzyFindPigeon-8    	  200000	     10575 ns/op
+
+Long  Pattern Long  Text:
+BenchmarkLongPLongTFuzzyFindShort-8      	  100000	     18173 ns/op
+BenchmarkLongPLongTFuzzyFindPigeon-8     	   30000	     46241 ns/op
+
+```
+
 ### This is a work in progress
 For now just use the FuzzyFindShort function, it has solid performance and is the most correct.
-
-### If you want to .... just get going:
-Use the FuzzyFind method, it will choose the best method for you depending on your pattern and text sizes
-
-### If you want to .... match the same pattern against multiple texts:
-This has yet to be implemented. It will likely use boyer moore to create a lookup table for the pattern.
-
-### If you want to .... match multiple patterns against the same text:
-This has yet to be implemented. It will likely use a kmer index of the text
-
-### If you want to .... specifically use just the modified levenshtien algorithm:
-Use FuzzyFindShort. This should work best on short patterns.
-
-### if you want to .... specifically use the pigeonhole method:
-use FuzzyFindPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3.
-This is also not yet implemented.
 
 ## Install
 `go get github.com/sstadick/fuzzyfind`
@@ -73,6 +77,22 @@ Output
  }
 }
 ```
+
+### If you want to .... just get going:
+Use the FuzzyFind method, it will choose the best method for you depending on your pattern and text sizes
+
+### If you want to .... match the same pattern against multiple texts:
+This has yet to be implemented. It will likely use boyer moore to create a lookup table for the pattern.
+
+### If you want to .... match multiple patterns against the same text:
+This has yet to be implemented. It will likely use a kmer index of the text
+
+### If you want to .... specifically use just the modified levenshtien algorithm:
+Use FuzzyFindShort. This should work best on short patterns.
+
+### if you want to .... specifically use the pigeonhole method:
+use FuzzyFindPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3.
+This is also not yet implemented.
 
 ## Futher readings
 - [Python Version](https://github.com/taleinat/fuzzysearch) (currently I'm based on v0.1.0)
