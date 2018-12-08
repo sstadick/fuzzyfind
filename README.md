@@ -1,3 +1,6 @@
+[![Documentation](https://godoc.org/github.com/sstadick/fuzzyfind?status.svg)](http://godoc.org/github.com/sstadick/fuzzyfind)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sstadick/fuzzyfind)](https://goreportcard.com/report/github.com/sstadick/fuzzyfind)
+
 # approx
 A clone of python fuzzysearch library in Go.
 
