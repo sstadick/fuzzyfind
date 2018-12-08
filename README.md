@@ -6,6 +6,10 @@ It is based off the v0.1.0 version of the Python [fuzzysearch library](https://g
 ## Synopsis
 fuzzyfind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
 
+
+### This is a work in progress
+For now just use the FuzzyFindShort function, it has solid performance and is the most correct.
+
 ### If you want to .... just get going:
 Use the FuzzyFind method, it will choose the best method for you depending on your pattern and text sizes
 

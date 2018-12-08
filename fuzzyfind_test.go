@@ -1,7 +1,6 @@
 package fuzzyfind
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -534,7 +533,7 @@ var EditTestCases = []TestCase{
 func checkMatches(tCase TestCase, matches []Match, t *testing.T) {
 	// Check the zero cases
 	if (len(matches) == 0 && len(tCase.Expected) != 0) || (len(matches) != 0 && len(tCase.Expected) == 0) {
-		fmt.Printf("%v\t%v\n", matches, tCase)
+		//fmt.Printf("%v\t%v\n", matches, tCase)
 		t.Errorf("Bad Number of Matchs: %s\n Found: %v\n Expected %v\n", tCase.Description,
 			matches, tCase.Expected)
 		return
@@ -551,11 +550,11 @@ func checkMatches(tCase TestCase, matches []Match, t *testing.T) {
 	for i, result := range matches {
 		// First check if we even expected matches
 		if len(tCase.Expected) == 0 {
-			fmt.Printf("%v\t%v\n", matches, tCase)
+			//fmt.Printf("%v\t%v\n", matches, tCase)
 			t.Errorf("Bad Match: %s\n Found: %v\n Expected %v\n", tCase.Description,
 				result, tCase.Expected)
 		} else if !(result == tCase.Expected[i]) {
-			fmt.Printf("%v\t%v\n", matches, tCase)
+			//fmt.Printf("%v\t%v\n", matches, tCase)
 			t.Errorf("Bad Match: %s\n Found: %v\n Expected %v\n", tCase.Description,
 				result, tCase.Expected[i])
 		}
@@ -598,20 +597,123 @@ func TestNaiveFuzzyFind(t *testing.T) {
 func TestFuzzyFindShort(t *testing.T) {
 
 	for _, tCase := range ExactTestCases {
-		matches := FuzzyFindShort(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		matches, _ := FuzzyFindShort(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
 		//fmt.Printf("%v\t%v\n", matches, tCase)
 		checkMatches(tCase, matches, t)
 	}
 	for _, tCase := range EditTestCases {
-		matches := FuzzyFindShort(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		matches, _ := FuzzyFindShort(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
 		//fmt.Printf("%v\t%v\n", matches, tCase)
 		checkMatches(tCase, matches, t)
 	}
 }
 
-func TestprepareInitCandidatesMap(t *testing.T) {
-	result := prepareInitCandidatesMap([]rune("GATTACA"), 2)
-	if result['G'] != 0 && result['A'] != 1 && result['T'] != 2 {
-		t.Error("Error making candidate dict")
+func TestFuzzyFindPigeon(t *testing.T) {
+
+	for _, tCase := range ExactTestCases {
+		matches, _ := FuzzyFindPigeon(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		//fmt.Printf("%v\t%v\n", matches, tCase)
+		checkMatches(tCase, matches, t)
+	}
+	for _, tCase := range EditTestCases {
+		matches, _ := FuzzyFindPigeon(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		//fmt.Printf("%v\t%v\n", matches, tCase)
+		checkMatches(tCase, matches, t)
+	}
+}
+
+func BenchmarkShortPShortTFuzzyFindShort(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGTAGCGTC"
+	text := "TATAACTCGTCGTAGCGTCAGATGT"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindShort(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkShortPLongTFuzzyFindShort(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGGCAGCGTC"
+	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindShort(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkLongPShortTFuzzyFindShort(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGTAGCGTCGTAGCG"
+	text := "TATAACTCGTCGTAGCGTCAGATGT"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindShort(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkLongPLongTFuzzyFindShort(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGGCAGCGTC"
+	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindShort(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkShortPShortTFuzzyFindPigeon(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGTAGCGTC"
+	text := "TATAACTCGTCGTAGCGTCAGATGT"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindPigeon(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkShortPLongTFuzzyFindPigeon(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGGCAGCGTC"
+	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindPigeon(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkLongPShortTFuzzyFindPigeon(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGTAGCGTCGTAGCG"
+	text := "TATAACTCGTCGTAGCGTCAGATGT"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindPigeon(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
+	}
+}
+
+func BenchmarkLongPLongTFuzzyFindPigeon(b *testing.B) {
+	// Two mutations, one I one D
+	pattern := "TCGTCGTAGCGTCAGATGTGTATAAGAGAC"
+	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
+	for i := 0; i < b.N; i++ {
+		matches, _ := FuzzyFindPigeon(pattern, text, 2, DefaultOptions)
+		for range matches {
+
+		}
 	}
 }
