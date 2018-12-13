@@ -7,7 +7,7 @@ fuzzyfind/approx is an approximate string matching tool. It is heavily inspired 
 What makes this library differnt than other \*fuzzy\* libraries is that it returns the start and end index's of your pattern in the text that you search. The long term goal is to add more variants of this search for different use cases. For now though, ApproxFind will work well.
 
 ## Synopsis
-fuzzyfind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
+ApproxFind uses a modified levenshtein algorithm to find approximate matches of a subsequence in a sequence. My reason for using this tools is for extracting regions of sequencing reads that might have mutations. 
 
 
 ## Benchmarks
@@ -82,7 +82,7 @@ Output
 ```
 
 ### If you want to .... just get going:
-Use the approx method, it will choose the best method for you depending on your pattern and text sizes
+Use the ApproxFind method, it will choose the best method for you depending on your pattern and text sizes
 
 ### If you want to .... match the same pattern against multiple texts:
 This has yet to be implemented. It will likely use boyer moore to create a lookup table for the pattern.
@@ -94,8 +94,7 @@ This has yet to be implemented. It will likely use a kmer index of the text
 Use ApproxFind. This should work best on short patterns.
 
 ### if you want to .... specifically use the pigeonhole method:
-use approxPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3.
-This is also not yet implemented.
+use approxPigeon. This will only work when you have a `len(pattern) / (maxDist + 1) >= 1` and should really only be used when greater than 3. Use this one at your own risk as it is not as well tested as ApproxFind, and seems to be slower in almost all cases right now.
 
 ## Futher readings
 - [Python Version](https://github.com/taleinat/fuzzysearch) (currently I'm based on v0.1.0)
