@@ -11,7 +11,7 @@ const MaxInt = int(^uint(0) >> 1)
 // Use the leven alogorithm to find the best match of pattern in text with up to maxE edit dist
 // It is expected that the user has already normalized: https://blog.golang.org/normalization
 // Leven adapted from https://github.com/texttheater/golang-levenshtein/blob/master/levenshtein/levenshtein.go
-func approxLeven(pattern []rune, text []rune, maxE int, op Options) []Match {
+func approxLeven(pattern []rune, text []rune, maxE int, op Options) ([]Match, error) {
 
 	height := len(pattern) + 1
 	width := len(text) + 1
@@ -48,7 +48,7 @@ func approxLeven(pattern []rune, text []rune, maxE int, op Options) []Match {
 		// Check to see if the min for the row is greater than the
 		// max allowed
 		if currentMin > maxE {
-			return []Match{}
+			return nil, nil
 		}
 	}
 	//LogMatrix(pattern, text, matrix)
@@ -64,13 +64,16 @@ func approxLeven(pattern []rune, text []rune, maxE int, op Options) []Match {
 	//	if len(minCols) == 0 {
 	//		return []Match{}
 	//	}
-	matches := trace(matrix, pattern, text, minCols, op)
-	return matches
+	matches, err := trace(matrix, pattern, text, minCols, op)
+	if err != nil {
+		return matches, fmt.Errorf("can't traceback matches: %v", err)
+	}
+	return matches, nil
 
 }
 
 // Traceback to find all the lowest edit distances
-func trace(matrix [][]int, p []rune, t []rune, minCols []int, op Options) []Match {
+func trace(matrix [][]int, p []rune, t []rune, minCols []int, op Options) ([]Match, error) {
 	// For each min alignment found, do a traceback
 	// I need the start, and end releative to the text, and the distance
 	// I have the end and the dist, just need the start
@@ -110,7 +113,7 @@ func trace(matrix [][]int, p []rune, t []rune, minCols []int, op Options) []Matc
 		}
 		matches = append(matches, Match{Start: j, End: min, Dist: matrix[len(p)][min]})
 	}
-	return matches
+	return matches, nil
 }
 
 // WriteMatrix writes a visual representation of the given matrix for the given

@@ -1,7 +1,9 @@
 package approx
 
 import (
+	"fmt"
 	"index/suffixarray"
+	"os"
 	"sort"
 )
 
@@ -27,7 +29,7 @@ func partition(p []rune, pieces int) [][]rune {
 // Break the pattern up into chunks, search for the chunks with exact match that uses a suffix index
 // Extend chunks when a match occurs, this is really only worth doing when the patterns and strings
 // get pretty long. For very repetative sequences, this can end up doing more work than a regular leven
-func approxPigeon(pattern []rune, text []rune, maxE int, op Options) []Match {
+func approxPigeon(pattern []rune, text []rune, maxE int, op Options) ([]Match, error) {
 	partitions := partition(pattern, maxE+1)
 	//fmt.Printf("Parts: %q\n", partitions)
 	offset := 0
@@ -58,7 +60,10 @@ func approxPigeon(pattern []rune, text []rune, maxE int, op Options) []Match {
 				leftIdx -= maxE
 			}
 
-			possible := approxLeven(pattern, text[leftIdx:rightIdx], maxE, op)
+			possible, err := approxLeven(pattern, text[leftIdx:rightIdx], maxE, op)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "bad thing in approxPigeon, find %q in %q", pattern, text[leftIdx:rightIdx])
+			}
 			for _, p := range possible {
 				occurances[Match{
 					Start: p.Start + leftIdx,
@@ -133,5 +138,5 @@ func approxPigeon(pattern []rune, text []rune, maxE int, op Options) []Match {
 		}
 		return matches[a].Start < matches[b].Start
 	})
-	return matches
+	return matches, nil
 }

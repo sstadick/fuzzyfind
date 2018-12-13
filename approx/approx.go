@@ -3,7 +3,6 @@
 package approx
 
 import (
-	"errors"
 	"fmt"
 	"os"
 )
@@ -15,13 +14,18 @@ import (
 // You should concider ammending the Options to make the version you don't want to see cost more.
 func ApproxFind(pattern string, text string, maxE int, op Options) ([]Match, error) {
 	// Check for empty strings first
-	if pattern == "" || text == "" {
-		return []Match{}, errors.New("Pattern and or Text is empty")
+	if pattern == "" {
+		return nil, fmt.Errorf("pattern to search empty")
+	} else if text == "" {
+		return nil, fmt.Errorf("text to search is empty")
 	}
 	// Runify
 	p := []rune(pattern)
 	t := []rune(text)
-	matches := approxLeven(p, t, maxE, op)
+	matches, err := approxLeven(p, t, maxE, op)
+	if err != nil {
+		return matches, err
+	}
 	return matches, nil
 }
 
@@ -33,8 +37,10 @@ func ApproxFind(pattern string, text string, maxE int, op Options) ([]Match, err
 // text - maxE, ApproxFind is run instead
 func approxFindPigeon(pattern string, text string, maxE int, op Options) ([]Match, error) {
 	// Check for empty strings first
-	if pattern == "" || text == "" {
-		return []Match{}, errors.New("Pattern and or Text is empty")
+	if pattern == "" {
+		return nil, fmt.Errorf("pattern to search empty")
+	} else if text == "" {
+		return nil, fmt.Errorf("text to search is empty")
 	}
 
 	if len(pattern)/(maxE+1) < 1 {
@@ -50,7 +56,49 @@ func approxFindPigeon(pattern string, text string, maxE int, op Options) ([]Matc
 	// Runify
 	p := []rune(pattern)
 	t := []rune(text)
-	matches := approxPigeon(p, t, maxE, op)
+	matches, err := approxPigeon(p, t, maxE, op)
+	if err != nil {
+		return matches, err
+	}
 
 	return matches, nil
+}
+
+// From a list of matches, grab the longest leftmost match with the best score
+// TODO: Return an error when we are given no matches
+func BestMatch(matches []Match) (Match, error) {
+
+	if len(matches) == 0 {
+		return Match{}, fmt.Errorf("No matches in list")
+	}
+
+	// Start with a match that is horrible
+	topMatch := Match{
+		Start: MaxInt,
+		End:   MaxInt,
+		Dist:  MaxInt,
+	}
+	for _, match := range matches {
+
+		if match.Dist < topMatch.Dist {
+			// match is better
+			topMatch = match
+		} else if match.Dist == topMatch.Dist {
+			// Match dist equal, see which is leftmost
+			if match.Start < topMatch.Start {
+				topMatch = match
+			} else if match.Start == topMatch.Start {
+
+				// match starts are equal, check which is longer
+				if (match.End - match.Start) > (topMatch.End - topMatch.Start) {
+					// match is longer
+					topMatch = match
+				} else if (match.End - match.Start) == (topMatch.End - topMatch.Start) {
+					// This case should never be hit, leave topMatch on top
+					fmt.Fprintf(os.Stderr, "This state should never be hit")
+				}
+			}
+		}
+	}
+	return topMatch, nil
 }
