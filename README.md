@@ -1,5 +1,7 @@
 [![Documentation](https://godoc.org/github.com/sstadick/fuzzyfind?status.svg)](http://godoc.org/github.com/sstadick/fuzzyfind)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sstadick/fuzzyfind)](https://goreportcard.com/report/github.com/sstadick/fuzzyfind)
+[![Maintainability](https://api.codeclimate.com/v1/badges/15d5ff1cb3d07eca8b4f/maintainability)](https://codeclimate.com/github/sstadick/fuzzyfind/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/15d5ff1cb3d07eca8b4f/test_coverage)](https://codeclimate.com/github/sstadick/fuzzyfind/test_coverage)
 
 # approx
 fuzzyfind/approx is an approximate string matching tool. It is heavily inspired by Python [fuzzysearch library](https://github.com/taleinat/fuzzysearch/blob/v0.1.0/fuzzysearch/fuzzysearch.py) by [Tal Einat](https://github.com/taleinat).
