@@ -596,13 +596,15 @@ func TestNaiveFuzzyFind(t *testing.T) {
 
 func TestApproxFind(t *testing.T) {
 
+	ctx := LevenContext{}
+
 	for _, tCase := range ExactTestCases {
-		matches, _ := ApproxFind(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
 		//fmt.Printf("%v\t%v\n", matches, tCase)
 		checkMatches(tCase, matches, t)
 	}
 	for _, tCase := range EditTestCases {
-		matches, _ := ApproxFind(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(tCase.Pattern, tCase.Text, tCase.MaxDist, DefaultOptions)
 		//fmt.Printf("%v\t%v\n", matches, tCase)
 		checkMatches(tCase, matches, t)
 	}
@@ -623,35 +625,38 @@ func TestapproxFindPigeon(t *testing.T) {
 }
 
 func BenchmarkShortPShortTApproxFind(b *testing.B) {
+	ctx := LevenContext{}
 	// Two mutations, one I one D
 	pattern := "TCGTCGTAGCGTC"
 	text := "TATAACTCGTCGTAGCGTCAGATGT"
 	for i := 0; i < b.N; i++ {
-		matches, _ := ApproxFind(pattern, text, 2, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(pattern, text, 2, DefaultOptions)
 		for range matches {
 
 		}
 	}
 }
 
-func BenchmarkShortPLongTApproxFind(b *testing.B) {
+func BenchmarkShortPLongTApproxLeven(b *testing.B) {
+	ctx := LevenContext{}
 	// Two mutations, one I one D
 	pattern := "TCGTCGGCAGCGTC"
 	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
 	for i := 0; i < b.N; i++ {
-		matches, _ := ApproxFind(pattern, text, 2, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(pattern, text, 2, DefaultOptions)
 		for range matches {
 
 		}
 	}
 }
 
-func BenchmarkLongPShortTApproxFind(b *testing.B) {
+func BenchmarkLongPShortTApproxLeven(b *testing.B) {
+	ctx := LevenContext{}
 	// Two mutations, one I one D
 	pattern := "TCGTCGTAGCGTCGTAGCG"
 	text := "TATAACTCGTCGTAGCGTCAGATGT"
 	for i := 0; i < b.N; i++ {
-		matches, _ := ApproxFind(pattern, text, 2, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(pattern, text, 2, DefaultOptions)
 		for range matches {
 
 		}
@@ -659,11 +664,12 @@ func BenchmarkLongPShortTApproxFind(b *testing.B) {
 }
 
 func BenchmarkLongPLongTApproxFind(b *testing.B) {
+	ctx := LevenContext{}
 	// Two mutations, one I one D
 	pattern := "TCGTCGGCAGCGTC"
 	text := "ACTCANTTATGCATGACTGGCAACAGTCATGTATAACTCGTCGTAGCGTCAGATGTGTATAAGAGACAGCTGTTCTCTCTCTCATCCCAAAACCTTTTGATTCCACTTCTTCCACCA"
 	for i := 0; i < b.N; i++ {
-		matches, _ := ApproxFind(pattern, text, 2, DefaultOptions)
+		matches, _ := ctx.ApproxLeven(pattern, text, 2, DefaultOptions)
 		for range matches {
 
 		}

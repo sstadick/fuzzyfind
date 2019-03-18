@@ -8,14 +8,41 @@ import (
 
 const MaxInt = int(^uint(0) >> 1)
 
+// LevenContext provides a reusable int Matrix
+type LevenContext struct {
+	matrix [][]int
+}
+
+func (c *LevenContext) getMatrix(height int) [][]int {
+	if cap(c.matrix) < height {
+		c.matrix = make([][]int, height)
+	}
+	return c.matrix[:height][:height]
+}
+
+// approxLeven is a wrapper for calling the distance function with the context struct
+func approxLeven(pattern []rune, text []rune, maxE int, op Options) ([]Match, error) {
+	c := LevenContext{}
+	return c.ApproxLeven(string(pattern), string(text), maxE, op)
+}
+
 // Use the leven alogorithm to find the best match of pattern in text with up to maxE edit dist
 // It is expected that the user has already normalized: https://blog.golang.org/normalization
 // Leven adapted from https://github.com/texttheater/golang-levenshtein/blob/master/levenshtein/levenshtein.go
-func approxLeven(pattern []rune, text []rune, maxE int, op Options) ([]Match, error) {
+// Note this is a little wierd right now because I'm hijacking what I had in order to add a context struct
+func (c *LevenContext) ApproxLeven(p string, t string, maxE int, op Options) ([]Match, error) {
 
+	// Check for empty strings first
+	if p == "" {
+		return nil, fmt.Errorf("pattern to search empty")
+	} else if t == "" {
+		return nil, fmt.Errorf("text to search is empty")
+	}
+	pattern := []rune(p)
+	text := []rune(t)
 	height := len(pattern) + 1
 	width := len(text) + 1
-	matrix := make([][]int, height)
+	matrix := c.getMatrix(height)
 
 	// Initialize trivial distances (from/to empty string). That is, fill
 	// the left column and the top row with row/column indices.
@@ -125,13 +152,13 @@ func WriteMatrix(pattern []rune, text []rune, matrix [][]int, writer io.Writer) 
 	}
 	fmt.Fprintf(writer, "\n")
 	fmt.Fprintf(writer, "  %2d", matrix[0][0])
-	for j, _ := range text {
+	for j := range text {
 		fmt.Fprintf(writer, " %2d", matrix[0][j+1])
 	}
 	fmt.Fprintf(writer, "\n")
 	for i, patternRune := range pattern {
 		fmt.Fprintf(writer, "%c %2d", patternRune, matrix[i+1][0])
-		for j, _ := range text {
+		for j := range text {
 			fmt.Fprintf(writer, " %2d", matrix[i+1][j+1])
 		}
 		fmt.Fprintf(writer, "\n")
